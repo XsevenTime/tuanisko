@@ -1,0 +1,20 @@
+{
+  "name": "Tuana Uygulaması",
+  "short_name": "Tuana 💖",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0f0c29",
+  "theme_color": "#ff6fa3",
+  "icons": [
+    {
+      "src": "https://cdn.glitch.global/1f733d54-6e4f-42d5-b510-8606e0142e4f/192g%C3%BCncel.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn.glitch.global/1f733d54-6e4f-42d5-b510-8606e0142e4f/512512guncel.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

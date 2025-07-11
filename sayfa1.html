@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TUANISKOOOO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes girisKapan {
+        0% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.95) translateY(40px);
+        }
+      }
+
+      @keyframes renkDalga {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      body {
+        background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", sans-serif;
+        overflow-x: hidden;
+        color: white;
+      }
+
+      h3 {
+        font-size: 2.5vw;
+        font-weight: 600;
+        color: transparent;
+        background: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-size: 300%;
+        animation: color 4s ease-in-out infinite;
+      }
+
+      @keyframes color {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .counter-text {
+        font-size: 2vw;
+        margin-top: 10px;
+        font-weight: bold;
+        background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+        background-size: 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: counterColor 6s ease-in-out infinite;
+        text-align: center;
+      }
+
+      @keyframes counterColor {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .img-container img {
+        max-width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 0 20px #ff7eb3;
+      }
+
+      .box,
+      .img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .kacan-buton,
+      .kacan-buton1 {
+        width: 160px;
+        position: absolute;
+        background-color: transparent;
+        cursor: pointer;
+        transition: top 0.2s, left 0.2s;
+        z-index: 2;
+      }
+
+      .kacan-buton button,
+      .kacan-buton1 button {
+        width: 100%;
+        font-size: 16px;
+        padding: 6px 10px;
+        background-color: #ff4e78;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #ff4e78;
+      }
+
+      .kacan-buton {
+        top: 710px;
+        left: 70%;
+        transform: translateX(-50%);
+      }
+      .kacan-buton1 {
+        top: 710px;
+        left: 30%;
+        transform: translateX(-50%);
+      }
+
+      .evet {
+        position: absolute;
+        top: 720px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+
+      .evet button {
+        background-color: #ff6fa3;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px #ff6fa3;
+      }
+
+      .heart {
+        position: fixed;
+        top: -20px;
+        font-size: 24px;
+        color: #ff91a4;
+        animation: fall 6s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(110vh);
+          opacity: 0;
+        }
+      }
+
+      .penguen {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 80px;
+        cursor: pointer;
+        z-index: 5;
+      }
+
+      .balon {
+        position: fixed;
+        bottom: 120px;
+        right: 110px;
+        background-color: rgba(255, 255, 255, 0.95);
+        color: #333;
+        padding: 15px 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px #000;
+        max-width: 250px;
+        font-size: 15px;
+        z-index: 4;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+
+      .balon-goster {
+        opacity: 1;
+      }
+      .balon-gizli {
+        opacity: 0;
+      }
+
+      #takvimBtn {
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        width: 60px;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      #ozelTakvim {
+        display: none;
+        position: fixed;
+        bottom: 180px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #333;
+        border-radius: 15px;
+        padding: 15px;
+        max-width: 280px;
+        box-shadow: 0 0 15px #000;
+        z-index: 9;
+        font-size: 14px;
+      }
+
+      @media (max-width: 768px) {
+        .kacan-buton,
+        .kacan-buton1,
+        .evet {
+          width: 120px;
+        }
+        .kacan-buton button,
+        .kacan-buton1 button,
+        .evet button {
+          font-size: 13px;
+          padding: 6px 8px;
+        }
+        h3 {
+          font-size: 5vw;
+        }
+        .kacan-buton {
+          left: 75%;
+        }
+        .kacan-buton1 {
+          left: 25%;
+        }
+        .penguen {
+          width: 60px;
+          bottom: 15px;
+          right: 15px;
+        }
+        .balon {
+          bottom: 90px;
+          right: 80px;
+          font-size: 13px;
+        }
+        #takvimBtn {
+          width: 50px;
+        }
+        #ozelTakvim {
+          font-size: 12px;
+          padding: 10px;
+        }
+      }
+      #yakalaTuana {
+        position: fixed;
+        top: 40%;
+        left: 40%;
+        font-size: 2.8rem;
+        cursor: pointer;
+        z-index: 999;
+        animation: ziplama 1.5s infinite ease-in-out;
+        transition: top 0.3s, left 0.3s;
+      }
+
+      @keyframes ziplama {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+#anaMenuBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #ff7eb3;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 0 15px #ff7eb3;
+  z-index: 999;
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+#anaMenuBtn:hover {
+  background-color: #ff4e78;
+  transform: scale(1.08);
+}
+    </style>
+  </head>
+  <body>
+<a href="index.html" id="anaMenuBtn">🏠 Ana Menü</a>
+<div id="sifreEkrani"
+  style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+  color: white; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; z-index: 10000;
+  font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px;">
+  
+  <h2 style="margin-bottom: 20px; font-size: 2rem;
+    background: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);
+    background-clip: text; -webkit-background-clip: text; color: transparent;
+    animation: renkDalga 4s infinite;">
+    💌 Merhaba Tuana
+  </h2>
+
+  <p style="max-width: 320px; margin-bottom: 25px; font-size: 1.1rem; line-height: 1.6;">
+    Bu sayfa kalbimden sana açılan bir kapı gibi...<br />
+    İçeri girmek için sihirli kelimeyi fısılda bana. 💫
+  </p>
+
+  <input id="sifreInput" type="password" placeholder="💗 Sihirli kelime nedir?"
+    style="padding: 10px 15px; font-size: 16px; border-radius: 10px;
+    border: none; margin-bottom: 15px; width: 240px;" />
+
+  <button onclick="sifreKontrol()"
+    style="padding: 10px 25px; background-color: #ff7eb3; color: white;
+    border: none; border-radius: 12px; font-size: 16px;
+    box-shadow: 0 0 15px #ff7eb3; cursor: pointer;">
+    🌸 Kapıyı Aç
+  </button>
+
+  <p id="uyari" style="margin-top: 15px; color: #ffb3b3; font-style: italic;"></p>
+</div>
+    <!-- GİRİŞ İLK SAYFA -->
+    <div
+      id="girisEkrani"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+        color: white;
+        text-align: center;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 20px;
+      "
+    >
+      <h2
+        style="
+          font-size: 2.5rem;
+          margin-bottom: 10px;
+          background: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          animation: renkDalga 4s infinite;
+        "
+      >
+        Merhaba TUANA 💖
+      </h2>
+
+      <p
+        id="yaziAnimasyon"
+        style="
+          font-size: 1.2rem;
+          max-width: 360px;
+          margin-bottom: 20px;
+          line-height: 1.6;
+          opacity: 0;
+          animation: fadeIn 2s forwards 1s;
+        "
+      >
+        Bu sayfa sadece senin için hazırlandı.<br />
+        Gülüşün gibi özel, dokunuşun gibi sıcak bir şey bekliyor seni burada...
+      </p>
+
+      <button
+        onclick="basla()"
+        style="
+          margin-top: 25px;
+          padding: 12px 28px;
+          font-size: 17px;
+          border: none;
+          border-radius: 16px;
+          background: #ff7eb3;
+          color: white;
+          box-shadow: 0 0 20px #ff7eb3;
+          cursor: pointer;
+          transition: transform 0.2s ease;
+        "
+        onmouseover="this.style.transform='scale(1.08)'"
+        onmouseout="this.style.transform='scale(1)'"
+      >
+        ✨ Hazırsan başlıyoruz
+      </button>
+    </div>
+    <!-- BUTONLAR -->
+    <div class="box">
+      <div>
+        <h3>Erdem Tuaniskoyu ne kadar seviyor?</h3>
+        <p id="counter" class="counter-text"></p>
+      </div>
+    </div>
+
+    <div class="img-container">
+      <img
+        src="https://cdn.glitch.global/1f733d54-6e4f-42d5-b510-8606e0142e4f/simsek.jpg?v=1749212885701"
+        alt="Simsek Resmi"
+      />
+    </div>
+
+    <div class="kacan-buton">
+      <button type="button" onmouseover="kac(this.parentElement)">
+        <h2 style="font-size: 16px">HİÇ SEVMİYOR</h2>
+      </button>
+    </div>
+
+    <div class="kacan-buton1">
+      <button type="button" onmouseover="kac(this.parentElement)">
+        <h2 style="font-size: 16px">SEVMİYOR</h2>
+      </button>
+    </div>
+
+    <div class="evet">
+      <a href="sayfa2.html">
+        <button type="button">
+          <h2 style="font-size: 16px">ÇOK SEVİYOR</h2>
+        </button>
+      </a>
+    </div>
+
+    <!-- Penguen ve Baloncuk -->
+    <img
+      id="penguen"
+      class="penguen"
+      src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
+      alt="Penguen"
+    />
+    <div id="balon" class="balon balon-gizli"></div>
+
+    <!-- Takvim -->
+    <img
+      id="takvimBtn"
+      src="https://cdn-icons-png.flaticon.com/512/747/747310.png"
+      alt="Takvim"
+    />
+    <div id="ozelTakvim">
+      <strong>📅 Özel Anılar</strong>
+      <ul style="padding-left: 18px; margin-top: 10px">
+        <li><strong>11 Temmuz:</strong> İlk tanışma</li>
+        <li><strong>20 Ağustos:</strong> İlk Buluşma</li>
+        <li><strong>20 Ağustos:</strong> İlk Araba Hediyesi</li>
+        <li><strong>2 Eylül:</strong> Tuanaya aldığım ilk çiçek</li>
+      </ul>
+    </div>
+
+    <!-- Oyun -->
+    <div id="yakalaTuana">🐥</div>
+
+    <script>
+      function kac(element) {
+        const padding = 50;
+        const maxX = window.innerWidth - element.offsetWidth - padding;
+        const maxY = window.innerHeight - element.offsetHeight - padding;
+        element.style.left = Math.random() * maxX + "px";
+        element.style.top = Math.random() * maxY + "px";
+      }
+
+      function updateCounter() {
+        const startDate = new Date("2024-07-11T00:00:00");
+        const now = new Date();
+        const diff = now - startDate;
+        const seconds = Math.floor(diff / 1000);
+        const days = Math.floor(seconds / (60 * 60 * 24));
+        const hours = Math.floor((seconds % (60 * 60 * 24)) / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        document.getElementById(
+          "counter"
+        ).textContent = `Tanışmamızın üstünden ${days} gün ${hours} saat ${minutes} dakika ${secs} saniye geçti.`;
+      }
+      setInterval(updateCounter, 1000);
+      updateCounter();
+
+      function createHearts() {
+        setInterval(() => {
+          const heart = document.createElement("div");
+          heart.className = "heart";
+          heart.textContent = "💖";
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.fontSize = Math.random() * 20 + 20 + "px";
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 6000);
+        }, 400);
+      }
+      createHearts();
+
+      const balon = document.getElementById("balon");
+      const mesajlar = [
+        "Seninle olmak, masal gibi... 🐧",
+        "Gülüşün kalbimi ısıtıyor 💫",
+        "Kalbimde yalnızca sen varsın 💖",
+        "Senin adını yıldızlara fısıldadım ✨",
+        "Birlikte her şey daha güzel 💌",
+      ];
+      document.getElementById("penguen").addEventListener("click", () => {
+        const rastgele = mesajlar[Math.floor(Math.random() * mesajlar.length)];
+        balon.textContent = rastgele;
+        balon.classList.remove("balon-gizli");
+        balon.classList.add("balon-goster");
+      });
+      balon.addEventListener("click", () => {
+        balon.classList.remove("balon-goster");
+        balon.classList.add("balon-gizli");
+      });
+
+      document.getElementById("takvimBtn").addEventListener("click", () => {
+        const takvim = document.getElementById("ozelTakvim");
+        takvim.style.display =
+          takvim.style.display === "none" ? "block" : "none";
+      });
+      function basla() {
+        const giris = document.getElementById("girisEkrani");
+        giris.style.animation = "girisKapan 0.8s ease forwards";
+        setTimeout(() => {
+          giris.style.display = "none";
+        }, 800);
+      }
+      const tuana = document.getElementById("yakalaTuana");
+
+      tuana.addEventListener("mouseover", function () {
+        const x = Math.random() * (window.innerWidth - 80);
+        const y = Math.random() * (window.innerHeight - 80);
+        this.style.left = `${x}px`;
+        this.style.top = `${y}px`;
+      });
+
+      tuana.addEventListener("click", function () {
+        alert("Ah be Tuana, seni yakalamak bile güzel 💖");
+      });
+function sifreKontrol() {
+  const sifre = document.getElementById("sifreInput").value;
+  const dogruSifre = "seni çok seviyorum"; // Buraya şifreni yaz
+  const uyari = document.getElementById("uyari");
+  
+  if (sifre === dogruSifre) {
+    document.getElementById("sifreEkrani").style.display = "none";
+  } else {
+    uyari.textContent = "🌧️ O sihirli kelime bu değil... Kalbini dinle ve tekrar dene.";
+  }
+}
+    </script>
+  </body>
+</html>

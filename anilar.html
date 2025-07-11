@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Birlikte Geçirdiğimiz Anılar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+      color: white;
+      font-family: "Segoe UI", sans-serif;
+      padding: 30px 20px;
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: renkDalga 4s infinite;
+    }
+
+    @keyframes renkDalga {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .memory-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .memory-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.08));
+      backdrop-filter: blur(5px);
+      border-radius: 30px;
+      box-shadow: 0 0 20px #ff7eb3;
+      padding: 20px;
+      max-width: 320px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .memory-card:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 0 25px #ffb6c1;
+    }
+
+    .memory-card img {
+      width: 100%;
+      border-radius: 15px;
+    }
+
+    .memory-text {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      border-radius: 15px;
+      margin-top: 10px;
+      color: #ffd1dc;
+      font-style: italic;
+      position: relative;
+    }
+
+    .memory-text::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      bottom: -10px;
+      width: 0;
+      height: 0;
+      border: 10px solid transparent;
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+
+    form {
+      margin-top: 40px;
+      max-width: 400px;
+      margin-inline: auto;
+    }
+
+    input[type="file"], textarea, input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 10px 20px;
+      border-radius: 10px;
+      background-color: #ff6fa3;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      box-shadow: 0 0 10px #ff6fa3;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .back-btn {
+      margin-top: 40px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 18px;
+      background: #ff6fa3;
+      color: white;
+      box-shadow: 0 0 18px #ff6fa3;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .heart {
+      position: fixed;
+      top: -20px;
+      font-size: 24px;
+      color: #ff91a4;
+      animation: fall 6s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 80vh;
+  border-radius: 20px;
+  box-shadow: 0 0 30px #ff7eb3;
+  animation: fadeZoom 0.5s ease;
+}
+
+@keyframes fadeZoom {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal:after {
+  content: "✖ Kapat";
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 10px;
+}
+  </style>
+</head>
+<body>
+<div id="imgModal" class="modal" onclick="this.style.display='none'">
+  <img class="modal-content" id="modalImage" />
+</div>
+
+<h1>📸 Birlikte Geçirdiğimiz Anılar</h1>
+<div class="memory-container" id="memoryContainer"></div>
+
+<form id="memoryForm">
+  <h3 style="margin-top:40px;color:#ffb3c6;">📝 Yeni Anı Ekle</h3>
+  <input type="file" id="imageFile" accept="image/*" required />
+  <textarea id="memoryText" rows="3" placeholder="Anının kısa açıklaması..." required></textarea>
+  <input type="date" id="memoryDate" required />
+  <button type="submit">Anıyı Kaydet</button>
+</form>
+
+<a href="index.html" class="back-btn">← Geri Dön</a>
+
+<script>
+  const supabaseUrl = "https://susbhlckgcrntbotxpbx.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1c2JobGNrZ2NybnRib3R4cGJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0MjQ3OTAsImV4cCI6MjA2NTAwMDc5MH0.Vcy-7Y6fzptgXKQkHiErjAMUmgQBgU2wKqD29Twk71M";
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+  const DELETE_PASSWORD = "tuana123"; // 🔐 Silme şifren burada
+
+  async function addMemory(e) {
+    e.preventDefault();
+    const file = document.getElementById("imageFile").files[0];
+    const text = document.getElementById("memoryText").value.trim();
+    const date = document.getElementById("memoryDate").value;
+    if (!file || !text || !date) return;
+
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `uploads/${fileName}`;
+
+    const { error: uploadErr } = await supabaseClient
+      .storage
+      .from("anilar")
+      .upload(filePath, file);
+
+    if (uploadErr) return alert("❌ Dosya yüklenemedi: " + uploadErr.message);
+
+    const img_url = `${supabaseUrl}/storage/v1/object/public/anilar/${filePath}`;
+    const { error: dbErr } = await supabaseClient
+      .from("anilar")
+      .insert({ img_url, text, tarih: date });
+
+    if (dbErr) return alert("❌ Anı kaydedilemedi: " + dbErr.message);
+
+    document.getElementById("imageFile").value = "";
+    document.getElementById("memoryText").value = "";
+    document.getElementById("memoryDate").value = "";
+    loadMemories();
+  }
+
+  function renderMemory(mem) {
+    const c = document.getElementById("memoryContainer");
+    const d = document.createElement("div");
+    d.className = "memory-card";
+    d.innerHTML = `
+      <img src="${mem.img_url}" onclick="showModal('${mem.img_url}')" />
+      <div class="memory-text">${mem.text}</div>
+      <div class="memory-text" style="font-size:0.9rem;color:#bbb;">📅 ${mem.tarih}</div>
+      <button onclick="deleteMemory('${mem.id}')" style="margin-top:10px;background:#ff4d6d;">🗑️ Sil</button>
+    `;
+    c.prepend(d);
+  }
+
+  async function deleteMemory(id) {
+    const userCode = prompt("Bu anıyı silmek için şifreyi gir:");
+    if (!userCode) return;
+
+    if (userCode !== DELETE_PASSWORD) {
+      return alert("❌ Yanlış şifre!");
+    }
+
+    const { error } = await supabaseClient
+      .from("anilar")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      alert("❌ Silme başarısız: " + error.message);
+    } else {
+      alert("✅ Anı silindi");
+      location.reload();
+    }
+  }
+
+  function showModal(src) {
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("modalImage");
+    modalImg.src = src;
+    modal.style.display = "block";
+  }
+
+  async function loadMemories() {
+    const { data, error } = await supabaseClient
+      .from("anilar")
+      .select("*")
+      .order("tarih", { ascending: false });
+
+    if (error) return;
+    document.getElementById("memoryContainer").innerHTML = "";
+    data.forEach(renderMemory);
+  }
+
+  document.getElementById("memoryForm").addEventListener("submit", addMemory);
+  loadMemories();
+
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 20 + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }, 400);
+</script>
+</body>
+</html>
